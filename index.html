@@ -9,7 +9,6 @@
   <meta name="description" content="Healthcare Resources offers CNA, CMA, Phlebotomy, EKG Tech, CPR/BLS, RN prep, and more. Flexible schedules, weekend cohorts, and job placement support." />
   <link rel="stylesheet" href="style.css" />
   <link rel="icon" href="data:," />
-
 </head>
 <body>
   <!-- Background slideshow (behind everything) -->
@@ -307,7 +306,7 @@
 
           <article class="card">
             <h3>Pay Tuition</h3>
-            <p>Select your program and pay securely through Stripe Checkout.</p>
+            <p>Select your program and pay securely through Square Checkout.</p>
 
             <div class="form__row">
               <label for="payProgram">Program</label>
@@ -322,11 +321,11 @@
               </select>
             </div>
 
-            <!-- A) Generic pay button (works for any program) -->
+            <!-- Pay button (Square) -->
             <a class="btn btn--small" href="#" id="pay-tuition">Pay Tuition</a>
 
             <p class="note small" style="margin-top:10px;">
-              Payments are processed securely by Stripe. If you have questions, call our office.
+              Payments are processed securely by Square. If you have questions, call our office.
             </p>
           </article>
         </div>
@@ -669,9 +668,7 @@
     });
 
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        closeModal();
-      }
+      if (e.key === 'Escape') closeModal();
     });
 
     // Auto file size (where supported)
@@ -701,37 +698,23 @@
       });
     });
 
-    async function startCheckout(priceId) {
-      const res = await fetch('/.netlify/functions/create-checkout-session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ priceId })
-      });
+    // ==============================
+    // Square Checkout Payment Link(s)
+    // ==============================
+    // You can keep ONE link for all programs (DEFAULT),
+    // or create different Square links per program and add them below.
+    const SQUARE_LINKS = {
+      DEFAULT: "https://square.link/u/RJod3f7"
 
-      const data = await res.json();
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        alert('Payment could not start.');
-        console.error(data);
-      }
-    }
-
-    /**
-     * Replace these with your real Stripe Price IDs (they start with price_)
-     * Example: "price_1N..." etc
-     */
-
-    // ===== B) Stripe Tuition Pay Button mapping + handler =====
-    const PRICE_IDS = {
-      CNA: "price_1Sj14SK9SDphIaehdd4Xeu01",
-      CMA: "price_1SjlnYK9SDphIaehhu4qDrB2",
-      PHLEB: "price_1Sjlo9K9SDphIaehME7xWiED",
-      EKG: "price_1SjlpbK9SDphIaehVbW5gBFm",
-      MEDAIDE: "price_1SjltgK9SDphIaeh1LyBcJVJ"
-      // CPR: handled differently (call to schedule)
+      // Optional per-program links (uncomment and paste if you create them)
+      // CNA: "https://square.link/u/XXXXXXXX",
+      // CMA: "https://square.link/u/XXXXXXXX",
+      // PHLEB: "https://square.link/u/XXXXXXXX",
+      // EKG: "https://square.link/u/XXXXXXXX",
+      // MEDAIDE: "https://square.link/u/XXXXXXXX"
     };
 
+    // Pay Tuition button handler (Square)
     document.getElementById('pay-tuition')?.addEventListener('click', (e) => {
       e.preventDefault();
 
@@ -748,17 +731,18 @@
         return;
       }
 
-      const priceId = PRICE_IDS[program];
+      // Use program-specific link if provided; otherwise use DEFAULT
+      const url = SQUARE_LINKS[program] || SQUARE_LINKS.DEFAULT;
 
-      if (!priceId) {
-        alert("This program is not set up for online payment yet.");
+      if (!url) {
+        alert("Payment link is not set up yet.");
         return;
       }
 
-      startCheckout(priceId);
+      window.open(url, "_blank", "noopener");
     });
 
-    // Keep your existing button too (so nothing breaks)
+    // Keep compatibility if an old button id exists somewhere
     document.getElementById('pay-program')?.addEventListener('click', (e) => {
       e.preventDefault();
 
@@ -769,20 +753,19 @@
         return;
       }
 
-      // CPR is “call to schedule” (no online payment)
       if (program === "CPR") {
         alert("Please call our office to schedule CPR/BLS payment and class time.");
         return;
       }
 
-      const priceId = PRICE_IDS[program];
+      const url = SQUARE_LINKS[program] || SQUARE_LINKS.DEFAULT;
 
-      if (!priceId) {
-        alert("This program is not set up for online payment yet.");
+      if (!url) {
+        alert("Payment link is not set up yet.");
         return;
       }
 
-      startCheckout(priceId);
+      window.open(url, "_blank", "noopener");
     });
   </script>
 </body>

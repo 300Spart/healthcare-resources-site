@@ -285,6 +285,7 @@
               <li>Certification exam fees paid directly to testing bodies</li>
             </ul>
           </article>
+
           <article class="card">
             <h3>Payment Plans</h3>
             <p>Split tuition into multiple payments across your program.</p>
@@ -294,6 +295,7 @@
               <li>Late fees only if payments are missed</li>
             </ul>
           </article>
+
           <article class="card">
             <h3>Employer & Grants</h3>
             <p>We can provide documentation for reimbursement or workforce grants.</p>
@@ -401,10 +403,8 @@
           </table>
         </div>
 
-        <!-- Fancy download / view buttons -->
         <div class="catalog-links">
           <div class="download-group">
-            <!-- Open modal PDF viewer -->
             <button class="btn btn--icon" type="button" data-modal-target="catalogModal">
               <span class="btn__icon">👁</span>
               <span>View Catalog Online (PDF)</span>
@@ -499,7 +499,6 @@
         </header>
 
         <div class="columns columns--split">
-          <!-- Left: Downloads and info -->
           <div class="application-info">
             <h3>Paper Application &amp; Catalog</h3>
             <p>
@@ -543,7 +542,6 @@
             </ul>
           </div>
 
-          <!-- Right: Online interest form -->
           <div class="application-form">
             <h3>Online Interest Form</h3>
             <form class="form" action="#" method="post" onsubmit="return false" aria-label="Application form">
@@ -693,25 +691,14 @@
           display = `(${Math.round(kb)} KB)`;
         }
         sizeSpan.textContent = ' ' + display;
-      }).catch(() => {
-        // Silent fail if file size can't be fetched (local file, etc.)
-      });
+      }).catch(() => {});
     });
 
     // ==============================
-    // Square Checkout Payment Link(s)
+    // Square Checkout Payment Link
     // ==============================
-    // You can keep ONE link for all programs (DEFAULT),
-    // or create different Square links per program and add them below.
     const SQUARE_LINKS = {
-      DEFAULT: "https://square.link/u/RJod3f7"
-
-      // Optional per-program links (uncomment and paste if you create them)
-      // CNA: "https://square.link/u/XXXXXXXX",
-      // CMA: "https://square.link/u/XXXXXXXX",
-      // PHLEB: "https://square.link/u/XXXXXXXX",
-      // EKG: "https://square.link/u/XXXXXXXX",
-      // MEDAIDE: "https://square.link/u/XXXXXXXX"
+      DEFAULT: "https://checkout.square.site/merchant/C4SKVZHGYGGTY/checkout/F3F743RZ52RIV7C2BWPYLETQ"
     };
 
     // Pay Tuition button handler (Square)
@@ -731,33 +718,6 @@
         return;
       }
 
-      // Use program-specific link if provided; otherwise use DEFAULT
-      const url = SQUARE_LINKS[program] || SQUARE_LINKS.DEFAULT;
-
-      if (!url) {
-        alert("Payment link is not set up yet.");
-        return;
-      }
-
-      window.open(url, "_blank", "noopener");
-    });
-
-    // Keep compatibility if an old button id exists somewhere
-    document.getElementById('pay-program')?.addEventListener('click', (e) => {
-      e.preventDefault();
-
-      const program = document.getElementById('payProgram')?.value;
-
-      if (!program) {
-        alert("Please select a program.");
-        return;
-      }
-
-      if (program === "CPR") {
-        alert("Please call our office to schedule CPR/BLS payment and class time.");
-        return;
-      }
-
       const url = SQUARE_LINKS[program] || SQUARE_LINKS.DEFAULT;
 
       if (!url) {
@@ -770,4 +730,3 @@
   </script>
 </body>
 </html>
-
